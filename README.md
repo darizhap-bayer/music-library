@@ -13,7 +13,7 @@ Each service uses its own PostgreSQL database. Services communicate via REST API
 1. **Clone the repository**
 	```bash
 	git clone <repository-url>
-	cd microservices
+	cd music-library
 	```
 2. **Start PostgreSQL databases**
 	```bash
