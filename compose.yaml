@@ -1,0 +1,27 @@
+version: '3.8'
+services:
+  postgres-resource:
+    image: postgres:18-alpine
+    container_name: postgres-resource
+    environment:
+      POSTGRES_DB: resource_db
+      POSTGRES_USER: resource_user
+      POSTGRES_PASSWORD: resource_pass
+    ports:
+      - "5432:5432"
+    volumes:
+      - resource_pgdata:/var/lib/postgresql/data
+  postgres-song:
+    image: postgres:18-alpine
+    container_name: postgres-song
+    environment:
+      POSTGRES_DB: song_db
+      POSTGRES_USER: song_user
+      POSTGRES_PASSWORD: song_pass
+    ports:
+      - "5433:5432"
+    volumes:
+      - song_pgdata:/var/lib/postgresql/data
+volumes:
+  resource_pgdata:
+  song_pgdata:
