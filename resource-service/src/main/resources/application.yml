@@ -4,5 +4,9 @@ spring:
     username: ${SPRING_DATASOURCE_USERNAME:resource_user}
     password: ${SPRING_DATASOURCE_PASSWORD:resource_pass}
     driver-class-name: org.postgresql.Driver
+
 server:
-  port: ${SERVER_PORT:8080}
+  port: 8080
+
+song-service:
+  url: ${SONG_SERVICE_URL:http://localhost:8081}
