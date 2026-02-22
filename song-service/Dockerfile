@@ -9,5 +9,5 @@ RUN ./gradlew assemble --no-daemon -x test
 FROM eclipse-temurin:21-jre-alpine AS runtime
 WORKDIR /app
 COPY --from=build /build/build/libs/*.jar app.jar
-EXPOSE 8080
+EXPOSE 8081
 CMD ["java", "-jar", "app.jar"]
