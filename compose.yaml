@@ -1,27 +1,58 @@
-version: '3.8'
 services:
-  postgres-resource:
+  resource-db:
     image: postgres:18-alpine
-    container_name: postgres-resource
     environment:
-      POSTGRES_DB: resource_db
-      POSTGRES_USER: resource_user
-      POSTGRES_PASSWORD: resource_pass
+      POSTGRES_DB: ${RESOURCE_DB}
+      POSTGRES_USER: ${RESOURCE_DB_USER}
+      POSTGRES_PASSWORD: ${RESOURCE_DB_PASSWORD}
     ports:
       - "5432:5432"
     volumes:
-      - resource_pgdata:/var/lib/postgresql/data
-  postgres-song:
+      - ./init-scripts/resource-db/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U resource_user" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  song-db:
     image: postgres:18-alpine
-    container_name: postgres-song
     environment:
-      POSTGRES_DB: song_db
-      POSTGRES_USER: song_user
-      POSTGRES_PASSWORD: song_pass
+      POSTGRES_DB: ${SONG_DB}
+      POSTGRES_USER: ${SONG_DB_USER}
+      POSTGRES_PASSWORD: ${SONG_DB_PASSWORD}
     ports:
       - "5433:5432"
     volumes:
-      - song_pgdata:/var/lib/postgresql/data
-volumes:
-  resource_pgdata:
-  song_pgdata:
+      - ./init-scripts/song-db/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U song_user" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  resource-service:
+    build:
+      context: resource-service
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://resource-db:5432/${RESOURCE_DB}
+      SPRING_DATASOURCE_USERNAME: ${RESOURCE_DB_USER}
+      SPRING_DATASOURCE_PASSWORD: ${RESOURCE_DB_PASSWORD}
+    ports:
+      - "8080:8080"
+    depends_on:
+      resource-db:
+        condition: service_healthy
+
+  song-service:
+    build:
+      context: song-service
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://song-db:5432/${SONG_DB}
+      SPRING_DATASOURCE_USERNAME: ${SONG_DB_USER}
+      SPRING_DATASOURCE_PASSWORD: ${SONG_DB_PASSWORD}
+    ports:
+      - "8081:8080"
+    depends_on:
+      song-db:
+        condition: service_healthy

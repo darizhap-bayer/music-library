@@ -1,2 +1,0 @@
-rootProject.name = 'music-library'
-include 'resource-service', 'song-service'

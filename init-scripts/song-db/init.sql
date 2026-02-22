@@ -1,0 +1,8 @@
+CREATE TABLE IF NOT EXISTS song (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR NOT NULL,
+    artist VARCHAR NOT NULL,
+    album VARCHAR NOT NULL,
+    duration VARCHAR NOT NULL,
+    year VARCHAR NOT NULL
+);
