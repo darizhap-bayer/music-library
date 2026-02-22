@@ -1,4 +1,4 @@
 CREATE TABLE IF NOT EXISTS resource (
-    id SERIAL PRIMARY KEY,
+    id BIGSERIAL PRIMARY KEY,
     audio_data BYTEA NOT NULL
 );
