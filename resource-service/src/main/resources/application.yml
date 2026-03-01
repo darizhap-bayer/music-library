@@ -1,4 +1,9 @@
 spring:
+  application:
+    name: resource-service
+  cloud:
+    config:
+      enabled: false
   datasource:
     url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/resource_db}
     username: ${SPRING_DATASOURCE_USERNAME:resource_user}
@@ -7,6 +12,14 @@ spring:
 
 server:
   port: 8080
+
+eureka:
+  client:
+    service-url:
+      default-zone: ${EUREKA_SERVER_URL:http://localhost:8761}/eureka
+    registry-fetch-interval-seconds: 5
+  instance:
+    lease-renewal-interval-in-seconds: 5
 
 song-service:
   url: ${SONG_SERVICE_URL:http://localhost:8081}
