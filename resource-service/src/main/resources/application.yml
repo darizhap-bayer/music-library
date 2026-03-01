@@ -20,6 +20,3 @@ eureka:
     registry-fetch-interval-seconds: 5
   instance:
     lease-renewal-interval-in-seconds: 5
-
-song-service:
-  url: ${SONG_SERVICE_URL:http://localhost:8081}
