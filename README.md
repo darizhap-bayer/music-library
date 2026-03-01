@@ -8,7 +8,7 @@ extraction. The system consists of two independent services:
 - **Resource Service**: Handles MP3 file storage and provides uploading, downloading, and deletion endpoints.
 - **Song Service**: Manages song metadata and provides creation, retrieval, and deletion endpoints.
 
-Each service uses its own PostgreSQL database. Services communicate via REST APIs.
+Each service uses its own PostgreSQL database. Services communicate via REST APIs and register with Eureka server.
 
 ## Quick Start
 
@@ -21,21 +21,21 @@ You can run the project in two ways:
     git clone <repository-url>
     cd music-library
     ```
-2. **Start all services and databases**
+2. **Start all services, Eureka server, and databases**
     ```bash
     docker compose up -d
     ```
     - Two databases will be started: one for resource-service and one for song-service.
     - Initialization scripts are located in `init-scripts/resource-db/init.sql` and `init-scripts/song-db/init.sql` and
       are applied automatically.
-    - Both services will be built and started.
+    - Eureka server and both services will be built and started.
 3. **Test endpoints**
     - Upload MP3: `POST /resources` (audio/mpeg)
     - Get metadata: `GET /songs/{id}`
     - Download MP3: `GET /resources/{id}`
     - Delete: `DELETE /resources?id=1,2,3`
 
-### Option 2: Run databases with Docker Compose, services locally
+### Option 2: Run databases with Docker Compose, Eureka server and services locally
 
 1. **Clone the repository** (see above)
 2. **Start PostgreSQL databases**
@@ -44,19 +44,25 @@ You can run the project in two ways:
     ```
     - This will start both databases.
     - Initialization scripts for databases will be applied automatically.
-3. **Build and run Resource Service**
+3. **Build and run Eureka server**
+    ```bash
+    cd eureka-server
+    ./gradlew build
+    ./gradlew bootRun
+    ```
+4. **Build and run Resource Service**
     ```bash
     cd resource-service
     ./gradlew build
     ./gradlew bootRun
     ```
-4. **Build and run Song Service (in a separate terminal)**
+5. **Build and run Song Service (in a separate terminal)**
     ```bash
     cd song-service
     ./gradlew build
     ./gradlew bootRun
     ```
-5. **Test endpoints** (see above)
+6. **Test endpoints** (see above)
 
 #### Notes
 
@@ -80,8 +86,9 @@ You can run the project in two ways:
 
 ## Technologies
 
-- Java 21, Spring Boot 4.0.2
+- Java 21, Spring Boot 4.0.3
 - PostgreSQL 18 (Docker Compose)
+- Netflix Eureka (service registry)
 - Apache Tika (metadata extraction)
 - Gradle (multi-module)
 - Lombok, JPA, Bean Validation
